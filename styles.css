@@ -1,0 +1,15 @@
+.comment {
+    color: gray
+}
+.operand {
+    color: red
+}
+.integer {
+    color: blue
+}
+.real {
+    color: green
+}
+.variable {
+    color: orange
+}

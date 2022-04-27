@@ -1,0 +1,36 @@
+#lang racket
+(require 2htdp/batch-io)
+(require parser-tools/lex)
+(require (prefix-in : parser-tools/lex-sre))
+
+(define input-file "input.txt")
+(define output-file "output.html")
+(define head-html "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"./styles.css\"><title>Actividad integral</title></head><body><h3 class=\"variable\">Variables</h3><h3 class=\"operand\">Operadores</h3><h3 class=\"integer\">Enteros</h3><h3 class=\"real\">Reales</h3><h3 class=\"comment\">Comentarios</h3><br>")
+
+(define rgx_matcher #rx"\\/\\/.*|\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*|[a-zA-Z][a-zA-Z0-9_]*|\\-*[0-9]+|\\^|\\/|\\+|\\-|\\*|\\=|\\(|\\)")
+
+
+(define (detect-token l)
+    (cond
+      [(regexp-match? #rx"\\/\\/.*" l) (string-append "<span class=\"comment\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*" l) (string-append "<span class=\"real\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"[a-zA-Z][a-zA-Z0-9_]*" l) (string-append "<span class=\"variable\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\-*[0-9]+" l) (string-append "<span class=\"integer\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\^|\\/|\\+|\\-|\\*|\\=|\\(|\\)" l) (string-append "<span class=\"operand\">" l "&nbsp</span>")]))
+
+(define (lexer-line lst)
+  (cond
+    [(null? lst) "</br>"]
+    [else (string-append (detect-token (car lst)) (lexer-line (cdr lst)))]))
+
+; recibe lista de lineas
+(define (lexer-lines lst)
+  (cond
+    [(null? lst) ""]
+    [else (string-append (lexer-line (regexp-match* rgx_matcher (car lst))) (lexer-lines (cdr lst)))]))
+
+(define (lexer if of)
+  (write-file of (string-append head-html (lexer-lines (read-lines if)) "</body></html>")))
+  
+
+ (lexer input-file output-file) 

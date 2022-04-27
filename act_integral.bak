@@ -1,0 +1,20 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname act_integral) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
+#lang racket
+(require 2htdp/batch-io)
+(require parser-tools/lex)
+(require (prefix-in : parser-tools/lex-sre))
+
+(define input-file "input.txt")
+(define output-file "output.txt")
+
+
+(define (lexer)
+  (for ([l (read-lines input-file)])
+    (cond
+      [(regexp-match? #rx"[a-zA-Z][a-zA-Z0-9_]*" l) (display  "variable\n")]
+      [(regexp-match? #rx"\\^|\\/|\\+|\\-|\\*|\\=|\\(|\\)" l) (display "operand\n")]
+      [(regexp-match? #rx"\\/\\/.*" l) (display "comment\n")]
+      [(regexp-match? #rx"\\-*[0-9]+" l) (display "integer\n")]
+      [(regexp-match? #rx"\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*" l) (display "real\n")])))
