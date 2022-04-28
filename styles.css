@@ -23,6 +23,10 @@ h3 {
     width: 150px;
 }
 
+span {
+    color: white;
+}
+
 .comment {
     color: #5c6370;
 }
@@ -40,4 +44,7 @@ h3 {
 }
 .palabraReservada {
     color: #cb6cfe;
+}
+.string {
+    color: #c3e88d;
 }

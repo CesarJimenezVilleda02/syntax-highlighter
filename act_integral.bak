@@ -1,20 +1,37 @@
-;; The first three lines of this file were inserted by DrRacket. They record metadata
-;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-advanced-reader.ss" "lang")((modname act_integral) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
 #lang racket
 (require 2htdp/batch-io)
 (require parser-tools/lex)
 (require (prefix-in : parser-tools/lex-sre))
 
 (define input-file "input.txt")
-(define output-file "output.txt")
+(define output-file "output.html")
+(define head-html "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"./styles.css\"><title>Actividad integral</title></head><body><div class=\"tokens\"><h3 class=\"variable\">Variables</h3><h3 class=\"palabraReservada\">Palabra Reservada</h3><h3 class=\"operand\">Operadores</h3><h3 class=\"integer\">Enteros</h3><h3 class=\"real\">Reales</h3><h3 class=\"comment\">Comentarios</h3></div><br>")
 
+(define rgx_matcher #rx"\\/\\/.*|\\".*\\"|\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*|[a-zA-Z][a-zA-Z0-9_]*|\\-*[0-9]+|\\^|\\/|\\+|\\-|\\*|\\=|\\(|\\)")
 
-(define (lexer)
-  (for ([l (read-lines input-file)])
+(define (detect-token l)
     (cond
-      [(regexp-match? #rx"[a-zA-Z][a-zA-Z0-9_]*" l) (display  "variable\n")]
-      [(regexp-match? #rx"\\^|\\/|\\+|\\-|\\*|\\=|\\(|\\)" l) (display "operand\n")]
-      [(regexp-match? #rx"\\/\\/.*" l) (display "comment\n")]
-      [(regexp-match? #rx"\\-*[0-9]+" l) (display "integer\n")]
-      [(regexp-match? #rx"\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*" l) (display "real\n")])))
+      [(regexp-match? #rx"\\/\\/.*" l) (string-append "<span class=\"comment\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\".*\\"" l) (string-append "<span class=\"string\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\auto|\\else|\\long|\\switch|\\break|\\enum|\\register|\\typedef|\\case|\\extern|\\return|\\union|\\char|\\float|\\short|\\unsigned|\\const|\\for|\\signed|\\void|\\continue|\\goto|\\sizeof|\\volatile|\\default|\\if|\\stati|\\while|\\do|\\int|\\struct_Packed|\\double" l) (string-append "<span class=\"palabraReservada\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*" l) (string-append "<span class=\"real\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"[a-zA-Z][a-zA-Z0-9_]*" l) (string-append "<span class=\"variable\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\-*[0-9]+" l) (string-append "<span class=\"integer\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\^|\\/|\\+|\\-|\\*|\\=|\\(|\\)" l) (string-append "<span class=\"operand\">" l "&nbsp</span>")]))
+
+(define (lexer-line lst)
+  (cond
+    [(null? lst) "</br>"]
+    [else (string-append (detect-token (car lst)) (lexer-line (cdr lst)))]))
+
+; recibe lista de lineas
+(define (lexer-lines lst)
+  (cond
+    [(null? lst) ""]
+    [else (string-append (lexer-line (regexp-match* rgx_matcher (car lst))) (lexer-lines (cdr lst)))]))
+
+(define (lexer if of)
+  (write-file of (string-append head-html (lexer-lines (read-lines if)) "</body></html>")))
+  
+
+ (lexer input-file output-file) 
