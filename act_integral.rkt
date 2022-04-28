@@ -5,14 +5,14 @@
 
 (define input-file "input.txt")
 (define output-file "output.html")
-(define head-html "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"./styles.css\"><title>Actividad integral</title></head><body><h3 class=\"variable\">Variables</h3><h3 class=\"operand\">Operadores</h3><h3 class=\"integer\">Enteros</h3><h3 class=\"real\">Reales</h3><h3 class=\"comment\">Comentarios</h3><br>")
+(define head-html "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"./styles.css\"><title>Actividad integral</title></head><body><div class=\"tokens\"><h3 class=\"variable\">Variables</h3><h3 class=\"palabraReservada\">Palabra Reservada</h3><h3 class=\"operand\">Operadores</h3><h3 class=\"integer\">Enteros</h3><h3 class=\"real\">Reales</h3><h3 class=\"comment\">Comentarios</h3></div><br>")
 
 (define rgx_matcher #rx"\\/\\/.*|\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*|[a-zA-Z][a-zA-Z0-9_]*|\\-*[0-9]+|\\^|\\/|\\+|\\-|\\*|\\=|\\(|\\)")
-
 
 (define (detect-token l)
     (cond
       [(regexp-match? #rx"\\/\\/.*" l) (string-append "<span class=\"comment\">" l "&nbsp</span>")]
+      [(regexp-match? #rx"\\auto|\\else|\\long|\\switch|\\break|\\enum|\\register|\\typedef|\\case|\\extern|\\return|\\union|\\char|\\float|\\short|\\unsigned|\\const|\\for|\\signed|\\void|\\continue|\\goto|\\sizeof|\\volatile|\\default|\\if|\\stati|\\while|\\do|\\int|\\struct_Packed|\\double" l) (string-append "<span class=\"palabraReservada\">" l "&nbsp</span>")]
       [(regexp-match? #rx"\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*" l) (string-append "<span class=\"real\">" l "&nbsp</span>")]
       [(regexp-match? #rx"[a-zA-Z][a-zA-Z0-9_]*" l) (string-append "<span class=\"variable\">" l "&nbsp</span>")]
       [(regexp-match? #rx"\\-*[0-9]+" l) (string-append "<span class=\"integer\">" l "&nbsp</span>")]
