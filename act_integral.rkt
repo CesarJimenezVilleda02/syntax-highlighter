@@ -5,7 +5,8 @@
 
 ;: Pablo Cesar Jimenez Villeda - A0170357
 ;: Ariann Fernando Arriaga Alcantara - A01703556
-;: ACTIVIDAD INTEGRAl 3.4 RESALTADOR DE SINTAXIS (EVIDENCIA DE COMPETENCIA)
+
+;: ACTIVIDAD INTEGRADORA 3.4 RESALTADOR DE SINTAXIS (EVIDENCIA DE COMPETENCIA)
 
 (define input-file "input.txt")
 (define output-file "output.html")
@@ -38,7 +39,7 @@
     [(null? lst) ""]
     [else (string-append (lexer-line (regexp-match* rgx_matcher (car lst))) (lexer-lines (cdr lst)))]))
 
-;; lexer-lines: string string -> string
+;; lexer: string string -> string
 (define (lexer if of)
   (write-file of (string-append head-html (lexer-lines (read-lines if)) "</body></html>")))
   
