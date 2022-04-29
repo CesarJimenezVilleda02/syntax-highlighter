@@ -5,8 +5,7 @@
 
 ;: Pablo Cesar Jimenez Villeda - A0170357
 ;: Ariann Fernando Arriaga Alcantara - A01703556
-
-;: ACTIVIDAD INTEGRADORA 3.4 RESALTADOR DE SINTAXIS (EVIDENCIA DE COMPETENCIA)
+;: ACTIVIDAD INTEGRAl 3.4 RESALTADOR DE SINTAXIS (EVIDENCIA DE COMPETENCIA)
 
 (define input-file "input.txt")
 (define output-file "output.html")
