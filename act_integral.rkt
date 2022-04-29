@@ -7,9 +7,6 @@
 ;: Ariann Fernando Arriaga Alcantara - A01703556
 
 ;: ACTIVIDAD INTEGRADORA 3.4 RESALTADOR DE SINTAXIS (EVIDENCIA DE COMPETENCIA)
-
-(define input-file "input.txt")
-(define output-file "output.html")
 (define head-html "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"./styles.css\"><title>Actividad integral</title></head><body><div class=\"tokens\"><h3 class=\"variable\">Variables</h3><h3 class=\"palabraReservada\">Palabra Reservada</h3><h3 class=\"operand\">Operadores</h3><h3 class=\"integer\">Enteros</h3><h3 class=\"real\">Reales</h3><h3 class=\"string\">Cadena</h3><h3 class=\"comment\">Comentarios</h3></div><br>")
 
 (define rgx_matcher #rx"\\/\\/.*|\".*\"|\\#include|\\scanf|\\printf|\\auto|\\else|\\long|\\switch|\\break|\\enum|\\register|\\typedef|\\case|\\extern|\\return|\\union|\\char|\\float|\\short|\\unsigned|\\const|\\for|\\signed|\\void|\\continue|\\goto|\\sizeof|\\volatile|\\default|\\if|\\stati|\\while|\\do|\\int|\\struct_Packed|\\double|\\-*[0-9]+\\.[0-9]+((E|e)-*[0-9]*)*|[a-zA-Z][a-zA-Z0-9_]*|\\-*[0-9]+|\\^|\\/|\\&|\\||\\+|\\-|\\*|\\=|\\(|\\)|.")
@@ -44,4 +41,6 @@
   (write-file of (string-append head-html (lexer-lines (read-lines if)) "</body></html>")))
   
 ;; TEST
- (lexer input-file output-file) 
+ (time (lexer "input.txt" "output.html") (void))
+ (time (lexer "input2.txt" "output2.html") (void))
+ (time (lexer "input3.txt" "output3.html") (void))
